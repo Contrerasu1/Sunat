@@ -1,7 +1,5 @@
 services:
   - type: web
-    name: sunat-ruc-verificador
-    env: python
+    name: sunat
     plan: free
-    buildCommand: pip install -r requirements.txt && playwright install chromium
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+    env: docker
