@@ -1,22 +1,21 @@
-# Imagen base oficial de Playwright con navegador ya instalado
-FROM mcr.microsoft.com/playwright/python:v1.43.1-jammy
+FROM python:3.11-slim
 
-# Establecer directorio de trabajo
+# Instala dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    wget gnupg ca-certificates curl unzip fonts-liberation libnss3 libxss1 libasound2 libxshmfence1 \
+    libgtk-3-0 libgbm1 libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2 libxext6 libxfixes3 libxrender1 libxtst6 libfontconfig1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instala Playwright
+RUN pip install --no-cache-dir playwright
+RUN playwright install chromium
+
+# Copia el código
 WORKDIR /app
-
-# Copiar archivos del proyecto
 COPY . .
 
-# Validar instalación de browsers
-RUN playwright install --with-deps && \
-    ls /ms-playwright && \
-    ls /ms-playwright/chromium-*
-
-# Instalar dependencias
+# Instala las dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Exponer puerto para FastAPI
 EXPOSE 10000
-
-# Comando para ejecutar la app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
