@@ -7,13 +7,13 @@ WORKDIR /app
 # Copiar archivos del proyecto
 COPY . .
 
-# Instalar dependencias
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Validar instalación de browsers
 RUN playwright install --with-deps && \
     ls /ms-playwright && \
     ls /ms-playwright/chromium-*
+
+# Instalar dependencias
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Exponer puerto para FastAPI
 EXPOSE 10000
